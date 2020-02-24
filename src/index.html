@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <link rel="stylesheet" href="css/style.css" type="text/css" />
+    </head>
+
+    <body>
+        <div id="controls">
+            <button id="connect">Connect PM5</button>
+            <button id="test-flow">Test FLOW</button>
+            <button id="connect-flow">Connect FLOW abdomen</button>
+            <button id="connect-flow-ribcage">Connect FLOW ribcage</button>
+            <button id="stop-flow">Stop all FLOW sensors</button>
+            <button id="connect-hr">Connect HR</button>
+            <button id="stop-hr">Stop heart rate</button>
+            <!-- <button id="toggle-instructions">Show instructions</button> -->
+            <span id="monitor-information"></span>
+        </div>
+
+        <!-- <div id="instruction-text" class="hidden"> -->
+        <!--     <p> -->
+        <!--     This application connects to a --> 
+        <!--     <a target="_blank" href="https://www.concept2.com/indoor-rowers/performance-monitors">Concept2 -->
+        <!--     PM5</a> monitor, a heart rate sensor and one or two BreathZpot Flow sensors over Web Bluetooth. -->
+        <!--     </p> -->
+
+        <!--     <h2>Requirements</h2> -->
+        <!--     <ul> -->
+        <!--         <li><a target="_blank" href="https://caniuse.com/#feat=web-bluetooth">Web Bluetooth supported browser</a>, for example Google Chrome.</li> -->
+        <!--         <li><a target="_blank" href="https://www.concept2.com/indoor-rowers/performance-monitors">PM5</a> attached to a -->
+        <!--             <a target="_blank" href="https://www.concept2.com">Concept2 ergometer</a>.</li> -->
+        <!--         <li>Heart rate sensor.</li> -->
+        <!--         <li>BreathZpot Flow sensor (one or two).</li> -->
+        <!--     </ul> -->
+
+        <!--     <h2>Usage</h2> -->
+            
+        <!--     In order to store data in a local file, follow these steps: -->
+
+        <!--     <ul> -->
+        <!--         <li>Run <code>node bridge.js</code> to set up an OSC server to collect data.</li> -->
+        <!--         <li>Load <code>index.html</code>. Check browser console; if <code>ERR_CONNECTION_REFUSED</code> appears, the script cannot communicate with the server, and no data will be written. If noe errors appear (warnings are acceptable), the script is working.</li> -->
+        <!--     </ul> -->
+
+        <!--     To connect sensors, follow these steps: -->
+        <!--     <ul> -->
+        <!--         <li>Press <strong>Connect HR</strong> to connect heart rate sensor.</li> -->
+        <!--         <li>Press <strong>Connect FLOW ribcage/abdomen</strong> to connect breathing sensors.</li> -->
+        <!--         <li>On the PM5, <strong>More Options</strong> -> <strong>Turn Wireless ON</strong></li> -->
+        <!--         <li>Click the <strong>Connect</strong> button above and pair to PM5.</li> -->
+        <!--         <li>Start rowing / skiing / biking.</li> -->
+        <!--     </ul> -->
+        <!--     <p> -->
+        <!--     Tested on Chrome on macOS Catalina. -->
+        <!--     </p> -->
+        <!-- </div> -->
+
+
+        
+
+        <div class="container">
+            <div class="statusText" id="heartRateText">HR</div>
+              <canvas class="chart" id="heartRateChart"></canvas>
+        </div>
+        <div class="container">
+            <div class="statusText" id="ribcageText">Ribcage</div>
+              <canvas class="chart" id="ribcageChart"></canvas>
+        </div>
+        <div class="container">
+            <div class="statusText" id="abdomenText">Abdomen</div>
+              <canvas class="chart" id="abdomenChart"></canvas>
+        </div>
+        <div class="container">
+            <div class="statusText" id="airflowText">Predicted airflow</div>
+              <canvas class="chart" id="airflowChart"></canvas>
+        </div>
+        <div class="container">
+            <div class="statusText" id="powerText">Power</div>
+              <canvas class="chart" id="powerChart"></canvas>
+        </div>
+
+        <div id="notifications">
+        </div>
+
+        <!-- <script src="js/canvaschart.js"></script> -->
+        <!-- <div id="chartContainer" style="height: 300px; width: 100%;"></div> -->
+        <!-- <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
+
+        <script src="http://127.0.0.1:8081/socket.io/socket.io.js"></script>
+        <script src="js/chart.js"></script>
+        <script src="js/pm5.js"></script>
+        <script src="js/pm5-printables.js"></script>
+        <script src="js/flow-abdomen.js"></script>
+        <script src="js/flow-ribcage.js"></script>
+        <script src="js/testflow.js"></script>
+        <script src="js/heartrate.js"></script>
+        <script src="js/ymnnjq.js"></script>
+        <script src="js/app.js"></script>
+        <script>
+            // Copied from osc-web example web-side by Automata / Wilson Vieira. https://github.com/automata/osc-web
+            var socket = io.connect('http://localhost:8081');
+            console.log('oi');
+            socket.on('connect', function() {
+                 // sends to socket.io server the host/port of oscServer
+                 // and oscClient
+                 socket.emit('config',
+                     {
+                         server: {
+                             port: 3333,
+                             host: '127.0.0.1'
+                         },
+                         client: {
+                             port: 3334,
+                             host: '127.0.0.1'
+                         }
+                     }
+                 );
+             });
+         
+             socket.on('message', function(obj) {
+                 var status = document.getElementById("status");
+                 status.innerHTML = obj[0];
+                 console.log(obj);
+             });
+         </script>
+
+    </body>
+
+</html>
