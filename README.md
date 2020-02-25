@@ -73,14 +73,3 @@ visualize any data, you could try:
 
 - Double check that the Moesif Orign & CORS Changer browser plugin is turned on.
 
-* Connecting FLOW sensors:
-    * Click **Connect FLOW abdomen**, and pair with your device. The airflow
-      model is based on abdominal movement, so the sensor needs to be placed
-      around the waist to get accurate predictions. The predicted airflow will
-      appear when 5 seconds of breathing have been sampled.
-    * To get breathing measurements from ribcage movement as well, place another
-      sensor around the ribcage, click **Connect FLOW ribcage** and pair with the
-      second sensor.
-    - The real time graphs of breathing data and predicted airflow will
-      automatically scale based on the maximum and minimum values obtained.
-
