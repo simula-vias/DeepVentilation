@@ -25,7 +25,6 @@ io.on('connection', function (socket) {
     oscClient.send(...toSend);
     console.log('sent WS message to OSC', toSend);
 
-    // fs.appendFileSync('data.txt', toSend +  "\n");
     // Write to file
     stream.write(toSend + "\n");
   });

@@ -23,6 +23,7 @@ var abdomenValues = [];
 var airflowValues = [];
 var maxAbVal = 0;
 var minAbVal = 4096;
+var maxAirVal = 0;
 var abdomenCanvas = document.querySelector('#abdomenChart');
 var airflowCanvas = document.querySelector('#airflowChart');
 
@@ -83,7 +84,7 @@ function handleFlowNotifications(event) {
     for (let i = 0; i < 7; i++) {
         //Takes the 7 first values as 16bit integers from each notification
         //This is then sent as a string with a sensor signifier as OSC using osc-web
-        // socket.emit('message', timestamp + ',abdomen,' + int16View[i].toString()); 
+        // socket.emit('message', timestamp + ',ribcage,' + int16View[i].toString() + ',' + (timestamp - 600 + i*100)); 
 
         let v = int16View[i];
 
@@ -120,9 +121,19 @@ function handleFlowNotifications(event) {
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
+            
             airflowValues.push(data.airflow);
             airflowText.innerHTML = "Predicted airflow: " + data.airflow;
-            drawWaves(airflowValues, airflowCanvas, 0.2, 42);
+
+            if (data.airflow > maxAirVal) {
+                maxAirVal = data.airflow;
+            }
+
+            var airflowPlotValues = airflowValues.map(function(element) {
+                return element/maxAirVal;
+            });
+
+            drawWaves(airflowPlotValues, airflowCanvas, 1, 42);
                 
         })
         .catch((error) => {
@@ -132,7 +143,7 @@ function handleFlowNotifications(event) {
 
     } else {
         airflowValues.push(0);
-        drawWaves(airflowValues, airflowCanvas, 0.2, 42);
+        drawWaves(airflowValues, airflowCanvas, 1, 42);
     }
 
     if (airflowValues.length > 28) {

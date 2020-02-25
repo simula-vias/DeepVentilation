@@ -81,7 +81,7 @@ function handleFlowRibcageNotifications(event) {
     for (let i = 0; i < 7; i++) {
         //Takes the 7 first values as 16bit integers from each notification
         //This is then sent as a string with a sensor signifier as OSC using osc-web
-        socket.emit('message', timestamp + ',ribcage,' + int16View[i].toString() + ',' + (timestamp - 600 + i*100)); 
+        // socket.emit('message', timestamp + ',ribcage,' + int16View[i].toString() + ',' + (timestamp - 600 + i*100)); 
 
         let v = int16View[i];
 
