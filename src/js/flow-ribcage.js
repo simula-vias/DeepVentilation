@@ -20,9 +20,13 @@ limitations under the License.
 
 var flowRibcageCharacteristic;
 var ribcageValues = [];
+var airflowValues = [];
 var maxRibVal = 0;
 var minRibVal = 4096;
+var maxAirVal = 0.9;
 var ribcageCanvas = document.querySelector('#ribcageChart');
+var abdomenCanvas = document.querySelector('#abdomenChart');
+var airflowCanvas = document.querySelector('#airflowChart');
 
 async function onFlowRibcageButtonClick() {
 
@@ -79,9 +83,6 @@ function handleFlowRibcageNotifications(event) {
     let timestamp = new Date().getTime();
     // TextDecoder to process raw data bytes.
     for (let i = 0; i < 7; i++) {
-        //Takes the 7 first values as 16bit integers from each notification
-        //This is then sent as a string with a sensor signifier as OSC using osc-web
-        // socket.emit('message', timestamp + ',ribcage,' + int16View[i].toString() + ',' + (timestamp - 600 + i*100)); 
 
         let v = int16View[i];
 
@@ -94,7 +95,7 @@ function handleFlowRibcageNotifications(event) {
 
         ribcageValues.push(int16View[i]);
     }
-    ribcageText.innerHTML = "Ribcage: " + int16View[0].toString();
+    ribcageText.innerHTML = "Ribcage movement: " + int16View[0].toString();
     
     // let minRibVal = Math.min.apply(null, ribcageValues);
     // let maxRibVal = Math.max.apply(null, ribcageValues);
@@ -103,10 +104,46 @@ function handleFlowRibcageNotifications(event) {
         return (element - minRibVal)/ribcageRange;
     });
 
-    if (ribcagePlotValues.length > 200) {
+    if (ribcagePlotValues.length > 455) {
         ribcageValues.splice(0, 7);
     }
     drawWaves(ribcagePlotValues, ribcageCanvas, 1, 6.0);
 
+    // Predicting airflow
+    if (ribcageValues.length > 50 ){
+        fetch('http://127.0.0.1:5000/getEstimation', {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({'value': ribcageValues.slice(-51, -1)})
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+            
+            airflowValues.push(data.airflow);
+            airflowText.innerHTML = "Predicted airflow: " + data.airflow;
+
+            if (data.airflow > maxAirVal) {
+                maxAirVal = data.airflow;
+            }
+
+            var airflowPlotValues = airflowValues.map(function(element) {
+                return element/maxAirVal;
+            });
+
+            drawWaves(airflowPlotValues, airflowCanvas, 1, 42, 70);
+                
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+        
+    } 
+
+    if (airflowValues.length > 64) {
+        airflowValues.shift();
+    }
 }
 

@@ -73,8 +73,9 @@ body {
   /* right: 0; */
   /* left: 0; */
   margin: 0 auto;
-  height: 10em;
-  width: 40em;
+  height: 20em;
+  padding: 1em 0 1em 0;
+  /* width: 40em; */
   /* bottom: 0; */
   background-color: #333333;
   /* font-family: Roboto; */
@@ -83,16 +84,16 @@ body {
 .statusText {
   position: absolute;
   /* bottom: 50%; */
-  left: 0;
-  right: 0;
-  text-align: center;
+  /* left: 0; */
+  /* right: 0; */
+  /* text-align: center; */
   margin: 0 auto;
   color: #fff;
   font-size: 38px;
-  width: 128px;
+  width: 856px;
   overflow-x: visible;
   cursor: default;
-  padding: 12px 0;
+  padding: 12px 0 0 12px;
   -webkit-user-select: none;
 }
 
