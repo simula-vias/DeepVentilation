@@ -41,11 +41,17 @@ Software:
 3. Make sure that the Moesif CORS plugin (or similar plugin) is switched on, and
    that your browser supports Web Bluetooth (for example Google Chrome).
 4. Open `index.html` in your browser.
+
+![Screenshot of web app](img/screenshot-01.png)
+
 5. Click **Connect FLOW**.
 6. Wait for the FLOW sensor to appear as "BreathZpot". In some cases this may
    take up to 30 seconds. If it does not appear, this might indicate that the
    FLOW sensor need a new battery.
-7. Select your sensor when it appears, and click **Pair**.
+
+![Connecting FLOW (BreathZpot) sensor.](img/screenshot-02.png)
+
+7. Select the FLOW (BreathZpot) sensor when it appears, and click **Pair**.
 8. After 3-8 seconds, the web app starts receiving data from the sensor, and the
    real time graph of the ribcage movement is shown.
 9. After 5 seconds of FLOW sensor data is sampled, the airflow prediction

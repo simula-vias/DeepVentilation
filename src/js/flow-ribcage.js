@@ -23,7 +23,8 @@ var ribcageValues = [];
 var airflowValues = [];
 var maxRibVal = 0;
 var minRibVal = 4096;
-var maxAirVal = 0.9;
+var minAirVal = 0.1;
+var maxAirVal = 0.0;
 var ribcageCanvas = document.querySelector('#ribcageChart');
 var abdomenCanvas = document.querySelector('#abdomenChart');
 var airflowCanvas = document.querySelector('#airflowChart');
@@ -128,9 +129,13 @@ function handleFlowRibcageNotifications(event) {
             if (data.airflow > maxAirVal) {
                 maxAirVal = data.airflow;
             }
+            if (data.airflow < minAirVal) {
+                minAirVal = data.airflow;
+            }
+            let airflowRange = maxAirVal - minAirVal;
 
             var airflowPlotValues = airflowValues.map(function(element) {
-                return element/maxAirVal;
+                return (element - minAirVal)/airflowRange;
             });
 
             drawWaves(airflowPlotValues, airflowCanvas, 1, 42, 70);
