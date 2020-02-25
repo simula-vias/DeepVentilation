@@ -46,10 +46,11 @@ Software:
       the paired sensor. After this you can click **Connect FLOW
       abdomen/ribcage**, and choose the sensor which is marked with *paired*;
       this is the one you connected to when testing.
+    - The real time graphs of breathing data and predicted airflow will
+      automatically scale based on the maximum and minimum values obtained.
 * Connecting PM5 BikeErg:
     * On the PM5 monitor, depending on your model: 
-        - **More Options**  -> **Turn Wireless ON**.
-        *or*
+        - **More Options**  -> **Turn Wireless ON** *or*
         - **Connect**.
     * Click the **Connect PM5** button in the web app. The PM5 should appear as
       a device; select it and click **Pair**. Power data will appear when you start
@@ -58,12 +59,6 @@ Software:
   separate heart rate sensor): 
   * Click **Connect HR**, and pair with a compatible device.
 
-
-
-Info about the app:
-
-- The real time graphs of breathing data and predicted airflow will
-  automatically scale based on the maximum and minimum values obtained.
 
 
 Tested in Google Chrome on Mac OS X.
