@@ -20,6 +20,8 @@ build*
 *.exe
 *.x
 
+.DS_Store
+
 # images
 #*.png
 #*.jpg
