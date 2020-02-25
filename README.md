@@ -8,7 +8,7 @@ neural netowrk model.
 
 Hardware:
 
-* [SweetZpot FLOW breathing sensor].
+* [SweetZpot FLOW breathing sensor](https://www.sweetzpot.com/flow).
 * [PM5](https://www.concept2.com/indoor-rowers/performance-monitors) attached to a [Concept2 ergometer](https://www.concept2.com).
 
 Software:
