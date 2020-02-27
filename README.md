@@ -19,7 +19,7 @@ Software:
   or similar plugin that allows you to send cross-domain requests directly from
   browser without receiving Cross Origin Errors.
 * Python 3, with the following modules:
-    - `pytorch`
+    - `torch`
     - `flask`
     - `numpy`
     - `joblib`
@@ -29,7 +29,7 @@ Software:
 ## Usage
 
 1. Strap the FLOW sensor around your chest, just below your chest muscles. The
-   sensor may be worn on top of clothing, but the clothes should not be to thick,
+   sensor may be worn on top of clothing, but the clothes should not be too thick,
    to make sure the sensor closely matches the movement of your ribcage. The
    length of the belt can be adjusted, such that it sits comfortably around your
    chest without gliding down during movement. It should not be too tight; you
@@ -47,7 +47,7 @@ Software:
 5. Click **Connect FLOW**.
 6. Wait for the FLOW sensor to appear as "BreathZpot". In some cases this may
    take up to 30 seconds. If it does not appear, this might indicate that the
-   FLOW sensor need a new battery.
+   FLOW sensor needs a new battery.
 
 ![Connecting FLOW (BreathZpot) sensor.](img/screenshot-02.png)
 

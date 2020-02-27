@@ -26,7 +26,6 @@ var minRibVal = 4096;
 var minAirVal = 0.1;
 var maxAirVal = 0.0;
 var ribcageCanvas = document.querySelector('#ribcageChart');
-var abdomenCanvas = document.querySelector('#abdomenChart');
 var airflowCanvas = document.querySelector('#airflowChart');
 
 async function onFlowRibcageButtonClick() {
@@ -112,19 +111,22 @@ function handleFlowRibcageNotifications(event) {
 
     // Predicting airflow
     if (ribcageValues.length > 50 ){
+
+        // let inputValues = ribcageValues.slice(-51, -1).map(function(element) {
+            // return (
+
         fetch('http://127.0.0.1:5000/getEstimation', {
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({'value': ribcageValues.slice(-51, -1)})
+          body: JSON.stringify({'value': ribcagePlotValues.slice(-51, -1)})
         })
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
             
             airflowValues.push(data.airflow);
-            airflowText.innerHTML = "Predicted airflow: " + data.airflow;
 
             if (data.airflow > maxAirVal) {
                 maxAirVal = data.airflow;
@@ -137,6 +139,8 @@ function handleFlowRibcageNotifications(event) {
             var airflowPlotValues = airflowValues.map(function(element) {
                 return (element - minAirVal)/airflowRange;
             });
+
+            airflowText.innerHTML = "Predicted airflow: " + airflowPlotValues.slice(-1);
 
             drawWaves(airflowPlotValues, airflowCanvas, 1, 42, 70);
                 
