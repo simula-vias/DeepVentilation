@@ -10,6 +10,8 @@ Hardware:
 * [SweetZpot FLOW breathing sensor](https://www.sweetzpot.com/flow) ([SweetZpot
   on Facebook](https://www.facebook.com/sweetzpot)).
 
+![The SweetZpot FLOW sensor](img/breathzpot.jpg)
+
 Software:
 
 * [Web Bluetooth supported browser](https://caniuse.com/#feat=web-bluetooth),
@@ -25,7 +27,6 @@ Software:
     - `joblib`
     - `scikit-learn`
 
-![The SweetZpot FLOW sensor](img/breathzpot.jpg)
 
 ## Usage
 
