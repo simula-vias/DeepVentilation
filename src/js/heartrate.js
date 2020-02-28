@@ -80,6 +80,8 @@ async function onStopHeartRateClick() {
 
 
 var heartRateValues = [];
+var maxHRVal = 0;
+var minHRVal = 200;
 var heartRateText = document.querySelector('#heartRateText');
 var heartRateCanvas = document.querySelector('#heartRateChart');
 
@@ -103,19 +105,26 @@ function handleHeartRateNotifications(event) {
         result.heartRate = value.getUint8(index);
         index += 1;
     }
-    let contactDetected = flags & 0x2;
-    let contactSensorPresent = flags & 0x4;
-    if (contactSensorPresent) {
-        result.contactDetected = !!contactDetected;
-    }
 
     heartRateText.innerHTML = result.heartRate + ' bpm';
     heartRateValues.push(result.heartRate);
 
-    if (heartRateValues.length > 20) {
+    if (result.heartRate > maxHRVal) {
+        maxHRVal = result.heartRate;
+    }
+    if (result.heartRate < minHRVal) {
+        minHRVal = result.heartRate;
+    }
+    let heartRateRange = maxHRVal - minHRVal;
+    var heartRatePlotValues = heartRateValues.map(function(element) {
+        return (element - minHRVal)/heartRateRange;
+    });
+
+
+    if (heartRateValues.length > 40) {
         heartRateValues.shift();
     }
 
-    drawWaves(heartRateValues, heartRateCanvas, 200, 60, 70);
+    drawWaves(heartRatePlotValues, heartRateCanvas, 1, 60, 70);
 }
 
