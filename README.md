@@ -25,6 +25,7 @@ Software:
     - `joblib`
     - `scikit-learn`
 
+![The SweetZpot FLOW sensor](img/breathzpot)
 
 ## Usage
 
@@ -56,6 +57,13 @@ Software:
    real time graph of the ribcage movement is shown.
 9. After 5 seconds of FLOW sensor data is sampled, the airflow prediction
    begins, and shows a real time graph.
+10. To sample heart rate data (optional), the FLOW sensor needs skin contact,
+    but should still be worn around the chest, just below the chest muscles.
+    Click **Connect HR**, and pair the sensor as described above. It may take up
+    to 30 seconds before the heart rate appears, if you already are sampling
+    data of ribcage movement.
+
+
 
 The real time graphs of breathing data and predicted airflow will automatically
 scale based on the maximum and minimum values obtained.
