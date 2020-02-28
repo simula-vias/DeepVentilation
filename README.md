@@ -44,14 +44,14 @@ Software:
    that your browser supports Web Bluetooth (for example Google Chrome).
 4. Open `index.html` in your browser.
 
-![Screenshot of web app.](img/screenshot-01.png)
+<!-- ![Screenshot of web app.](img/screenshot-01.png) -->
 
 5. Click **Connect FLOW**.
 6. Wait for the FLOW sensor to appear as "BreathZpot". In some cases this may
    take up to 30 seconds. If it does not appear, this might indicate that the
    FLOW sensor needs a new battery.
 
-![Connecting FLOW (BreathZpot) sensor.](img/screenshot-02.png)
+<!-- ![Connecting FLOW (BreathZpot) sensor.](img/screenshot-02.png) -->
 
 7. Select the FLOW (BreathZpot) sensor when it appears, and click **Pair**.
 8. After 3-8 seconds, the web app starts receiving data from the sensor, and the
@@ -62,11 +62,10 @@ Software:
     the chest muscles next to the skin. Click **Connect HR**, and pair the
     sensor as described above. 
 
-The real time graphs will automatically scale based on the maximum and minimum
-values obtained.
-
 ![Connecting the sensors.](img/recording-01.gif)
 
+The real time graphs will automatically scale based on the maximum and minimum
+values obtained.
 
 ![Demonstration of data recording.](img/recording-02.gif)
 
