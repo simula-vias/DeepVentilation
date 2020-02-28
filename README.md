@@ -68,7 +68,7 @@ values obtained.
 ![Connecting the sensors.](img/recording-01.gif)
 
 
-![Demonstration of data recording.](img/demo-02.gif)
+![Demonstration of data recording.](img/recording-02.gif)
 
 ### Troubleshooting
 
