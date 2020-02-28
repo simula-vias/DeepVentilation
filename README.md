@@ -25,7 +25,7 @@ Software:
     - `joblib`
     - `scikit-learn`
 
-![The SweetZpot FLOW sensor](img/breathzpot)
+![The SweetZpot FLOW sensor](img/breathzpot.jpg)
 
 ## Usage
 
