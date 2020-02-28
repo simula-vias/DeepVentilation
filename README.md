@@ -10,7 +10,7 @@ Hardware:
 * [SweetZpot FLOW breathing sensor](https://www.sweetzpot.com/flow) ([SweetZpot
   on Facebook](https://www.facebook.com/sweetzpot)).
 
-![The SweetZpot FLOW sensor](img/flow.jpg)
+![The SweetZpot FLOW sensor.](img/flow.jpg)
 
 Software:
 
@@ -44,7 +44,7 @@ Software:
    that your browser supports Web Bluetooth (for example Google Chrome).
 4. Open `index.html` in your browser.
 
-![Screenshot of web app](img/screenshot-01.png)
+![Screenshot of web app.](img/screenshot-01.png)
 
 5. Click **Connect FLOW**.
 6. Wait for the FLOW sensor to appear as "BreathZpot". In some cases this may
@@ -65,6 +65,7 @@ Software:
 The real time graphs will automatically scale based on the maximum and minimum
 values obtained.
 
+![Demonstration of data recording.](img/demo.gof)
 
 ### Troubleshooting
 

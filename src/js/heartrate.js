@@ -121,7 +121,7 @@ function handleHeartRateNotifications(event) {
     });
 
 
-    if (heartRateValues.length > 40) {
+    if (heartRateValues.length > 45) {
         heartRateValues.shift();
     }
 
