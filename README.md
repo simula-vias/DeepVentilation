@@ -65,7 +65,7 @@ Software:
 The real time graphs will automatically scale based on the maximum and minimum
 values obtained.
 
-![Connecting the sensors.](img/demo-01.gif)
+![Connecting the sensors.](img/recording-01.gif)
 
 
 ![Demonstration of data recording.](img/demo-02.gif)
