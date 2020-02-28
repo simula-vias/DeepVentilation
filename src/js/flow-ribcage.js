@@ -95,7 +95,7 @@ function handleFlowRibcageNotifications(event) {
 
         ribcageValues.push(int16View[i]);
     }
-    ribcageText.innerHTML = "Ribcage movement: " + int16View[0].toString();
+    // ribcageText.innerHTML = "Ribcage movement: " + int16View[0].toString();
     
     // let minRibVal = Math.min.apply(null, ribcageValues);
     // let maxRibVal = Math.max.apply(null, ribcageValues);
@@ -141,7 +141,11 @@ function handleFlowRibcageNotifications(event) {
                 return (element - minAirVal)/airflowRange;
             });
 
-            // airflowText.innerHTML = "Predicted airflow: " + airflowPlotValues.slice(-1);
+            // let a = airflowPlotValues.slice(-1);
+            // a = a*200 - 100;
+
+            // airflowText.innerHTML = "Predicted airflow: " + airflowValues.slice(-1);
+            // airflowText.innerHTML = "Predicted airflow: " + Math.round(a);
 
             drawWaves(airflowPlotValues, airflowCanvas, 1, 42, 70);
                 
@@ -153,7 +157,6 @@ function handleFlowRibcageNotifications(event) {
     } 
 
     if (airflowValues.length > 64) {
-    // if (airflowValues.length > 28) {
         airflowValues.shift();
     }
 }

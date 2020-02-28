@@ -22,45 +22,39 @@ var heartRateCharacteristic;
 
 async function onHeartRateButtonClick() {
 
-    // if (heartRateConnected) {
-    //     onStopHeartRateClick();
-    //     document.querySelector('#connect-hr').innerText = 'Connect HR';
-    // } else {
+    let serviceUuid = 0x180d; // Heart rate service
+    serviceUuid = parseInt(serviceUuid);
 
-        let serviceUuid = 0x180d; // Heart rate service
-        serviceUuid = parseInt(serviceUuid);
+    let characteristicUuid = 0x2a37; // Heart rate characteristic
+    characteristicUuid = parseInt(characteristicUuid);
 
-        let characteristicUuid = 0x2a37; // Heart rate characteristic
-        characteristicUuid = parseInt(characteristicUuid);
+    try {
+        console.log('Requesting Bluetooth Device...');
+        const device = await navigator.bluetooth.requestDevice({
+            filters: [{services: [serviceUuid]}]});
 
-        try {
-            console.log('Requesting Bluetooth Device...');
-            const device = await navigator.bluetooth.requestDevice({
-                filters: [{services: [serviceUuid]}]});
+        console.log('Connecting to GATT Server...');
+        const server = await device.gatt.connect();
 
-            console.log('Connecting to GATT Server...');
-            const server = await device.gatt.connect();
+        console.log('Getting Service...');
+        const service = await server.getPrimaryService(serviceUuid);
 
-            console.log('Getting Service...');
-            const service = await server.getPrimaryService(serviceUuid);
+        console.log('Getting Characteristic...');
+        heartRateCharacteristic = await service.getCharacteristic(characteristicUuid);
 
-            console.log('Getting Characteristic...');
-            heartRateCharacteristic = await service.getCharacteristic(characteristicUuid);
+        await heartRateCharacteristic.startNotifications();
 
-            await heartRateCharacteristic.startNotifications();
+        // heartRateConnected = true;
+        // document.querySelector('#connect-hr').innerText = 'Disconnect HR';
 
-            // heartRateConnected = true;
-            // document.querySelector('#connect-hr').innerText = 'Disconnect HR';
+        console.log('> Notifications started');
+        heartRateCharacteristic.addEventListener('characteristicvaluechanged',
+            handleHeartRateNotifications);
 
-            console.log('> Notifications started');
-            heartRateCharacteristic.addEventListener('characteristicvaluechanged',
-                handleHeartRateNotifications);
-
-        
-        } catch(error) {
-            console.log('Argh! ' + error);
-        }
-    // }
+    
+    } catch(error) {
+        console.log('Argh! ' + error);
+    }
     
 }
 
@@ -106,7 +100,7 @@ function handleHeartRateNotifications(event) {
         index += 1;
     }
 
-    heartRateText.innerHTML = result.heartRate + ' bpm';
+    heartRateText.innerHTML = 'HR: ' + result.heartRate + ' bpm';
     heartRateValues.push(result.heartRate);
 
     if (result.heartRate > maxHRVal) {

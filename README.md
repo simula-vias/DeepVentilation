@@ -62,12 +62,14 @@ Software:
     the chest muscles next to the skin. Click **Connect HR**, and pair the
     sensor as described above. 
 
-![Connecting the sensors.](img/recording-01.gif)
+![Connecting the sensors.](img/connect.gif)
 
 The real time graphs will automatically scale based on the maximum and minimum
-values obtained.
+values obtained. The top graph shows the movement of the ribcage. The second
+graph shows predicted airflow, but no value is shown since that would require
+calibration. The bottom graph shows the heart rate in beats per minute.
 
-![Demonstration of data recording.](img/recording-02-lowres.gif)
+![Demonstration of data recording.](img/recording.gif)
 
 ### Troubleshooting
 
