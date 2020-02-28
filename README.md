@@ -62,7 +62,7 @@ Software:
     the chest muscles next to the skin. Click **Connect HR**, and pair the
     sensor as described above. 
 
-<!-- ![Connecting the sensors.](img/recording-01.gif) -->
+![Connecting the sensors.](img/recording-01.gif)
 
 The real time graphs will automatically scale based on the maximum and minimum
 values obtained.
