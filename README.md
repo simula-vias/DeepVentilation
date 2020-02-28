@@ -67,7 +67,7 @@ Software:
 The real time graphs will automatically scale based on the maximum and minimum
 values obtained.
 
-![Demonstration of data recording.](img/recording-02.gif)
+![Demonstration of data recording.](img/recording-02-lowres.gif)
 
 ### Troubleshooting
 
