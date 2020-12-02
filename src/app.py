@@ -1,94 +1,141 @@
-#!flask/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Real-time prediction tool for DeepVentilation.
+
+Author:   
+    Erik Johannes Husom
+
+Created:  
+    2020-12-02
+
+"""
+import time
+
 from flask import Flask, abort, jsonify
 from flask import request
-import torch
-import torch.nn as nn
-from torch.autograd import Variable
 import joblib
 import numpy as np
-import time
+import pandas as pd
+from tensorflow.keras import models
 
 app = Flask(__name__)
 
-PATH = 'model/'
+PATH = "model/"
+hist_size = 50
 
-historic_size = 50
-
-input_dim = 1        # input dimension
-hidden_dim = 20      # hidden layer dimension
-layer_dim = 3        # number of hidden layers
-output_dim = 1       # output dimension
-
-@app.route('/')
+@app.route("/")
 def index():
     return "Hello, World!"
 
-'''
+"""
 Input : array of breathing value of the size of historic_size
 Output: airflow estimation + time of execution
-'''
-@app.route('/getEstimation', methods=['POST'])
+"""
+@app.route("/getEstimation", methods=["POST"])
 def getEstimation():
     t = time.time()
     print(request.json)
-    if not request.json or not 'value' in request.json or len(request.json['value']) != historic_size:
+    if not request.json or not "value" in request.json or len(request.json["value"]) != hist_size:
         abort(400)
-    x = BREATH.transform(np.array(request.json['value']).reshape(-1, 1)).reshape(1, historic_size, 1)   # rescale breathing
-    y = model(Variable(torch.from_numpy(x).type(torch.FloatTensor)))                             # prediction
-    y = AIRFLOW.inverse_transform(y.cpu().detach().numpy().reshape(-1, 1)).reshape(-1)                          # rescale airflow
-    t = time.time() - t                                                                                 # duration estimation
-    return jsonify({'airflow' : str(y[0]),'time' : str(t)})
+
+    X = np.array(request.json["value"]).reshape(-1, 1)
+    X = preprocess(X)
+    X = scale(X)
+    print(scaler)
+    print(X)
+    print(X.shape)
+
+    y = [0]
+    t = time.time() - t 
+    return jsonify({"airflow" : str(y[0]),"time" : str(t)})
 
 
-class LSTMModel(nn.Module):
-    def __init__(self, input_dim, hidden_dim, layer_dim, output_dim):
-        super(LSTMModel, self).__init__()
-        # Number of hidden dimensions
-        self.hidden_dim = hidden_dim
+def preprocess(X):
+    """Preprocess input data.
 
-        # Number of hidden layers
-        self.layer_dim = layer_dim
+    Args:
+        X (numpy array): Input.
 
-        # LSTM
-        self.lstm = nn.LSTM(input_dim, hidden_dim, layer_dim, batch_first=True, dropout=0.2)
+    Returns:
+        numpy array: Preprocessed inputs.
 
-        # Readout layer
-        self.f1 = nn.Linear(hidden_dim, 10)
-        self.d1 = nn.Dropout(p=0.2)
-        self.f5 = nn.Linear(10, output_dim)
+    """
+    range_smoothing = 1
+    slope_shift = 1
 
-    def forward(self, x):
-        # Initialize hidden state with zeros
-        h0 = Variable(torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).type(torch.FloatTensor))
+    df = pd.DataFrame(X, columns=["ribcage"])
+    df.dropna(inplace=True)
 
-        # Initialize cell state
-        c0 = Variable(torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).type(torch.FloatTensor))
+    df["ribcage_gradient"] = np.gradient(df["ribcage"])
 
-        # One time step
-        out, (hn, cn) = self.lstm(x, (h0, c0))
+    df["ribcage_slope_sin"] = np.sin(
+            calculate_slope(df["ribcage"], shift=1,
+                rolling_mean_window=1, absvalue=False)
+    )
+    df["ribcage_slope_cos"] = np.cos(
+            calculate_slope(df["ribcage"], shift=1,
+                rolling_mean_window=1, absvalue=False)
+    )
 
-        # Index hidden state of last time step
-        out = torch.relu(self.f1(out[:, -1, :]))
-        out = self.d1(out)
-        out = torch.relu(self.f5(out))
-        return out
+    del df["ribcage"]
+
+    df.fillna(method="bfill", inplace=True)
+
+    return np.array(df)
+
+def scale(X):
+    """Scale inputs.
+
+    Args:
+        X (numpy array): Inputs to scale.
+
+    """
+
+    return scaler.transform(X)
+
+def calculate_slope(data, shift=1, rolling_mean_window=1, absvalue=False):
+    """Calculate slope.
+
+    Args:
+        data (array): Data for slope calculation.
+        shift (int): How many steps backwards to go when calculating the slope.
+            For example: If shift=2, the slope is calculated from the data
+            point two time steps ago to the data point at the current time
+            step.
+        rolling_mean_window (int): Window for calculating rolling mean.
+
+    Returns:
+        slope (array): Array of slope angle.
+
+    """
+
+    v_dist = data - data.shift(shift)
+    h_dist = 0.1 * shift
+
+    slope = np.arctan(v_dist / h_dist)
+
+    if absvalue:
+        slope = np.abs(slope)
+
+    slope = slope.rolling(rolling_mean_window).mean()
+
+    return slope
 
 
-'''
+"""
 This function load all the models form the file one time before the lauch of the app 
-'''
-if __name__ == '__main__':
-    # Load rescaler
-    BREATH = joblib.load(PATH + 'rescale_breath_model.sav')
-    print('Breath scaler load successfully')
-    AIRFLOW = joblib.load(PATH + 'rescale_airflow_model.sav')
-    print('Airflow scaler load successfully')
+"""
+if __name__ == "__main__":
+    # Load scaler
+    scaler = joblib.load(PATH + "scaler.sav")
+    print("Scaler load successfully")
 
-    # Load LSTM model
-    model = LSTMModel(input_dim, hidden_dim, layer_dim, output_dim)
-    model.load_state_dict(torch.load(PATH + 'Airflow_estimation_LSTM_model.sav', map_location=lambda storage, loc: storage))
-    model.eval()
-    print('LSTM load successfully')
+    # Load model
+    model = models.load_model(PATH + "model.h5")
+    print("Model successfully")
+    print(model.summary())
 
     # Start the app
     app.run(debug=True, port=5000)
+
+

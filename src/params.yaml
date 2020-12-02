@@ -1,0 +1,62 @@
+restructure:
+
+featurize:
+  # The variables listed under 'delete' is deleted before starting preprocessing,
+  # and should only be done to variables that are not going to be used at all.
+  target: airflow
+  features:
+    # - ribcage_min
+    # - ribcage_max
+    - ribcage_range
+    - ribcage_gradient
+    # - heartrate_gradient
+    # - ribcage_frequency
+    # - ribcage_slope
+    - ribcage_slope_cyclic
+    # - heartrate_slope_cyclic
+  # The variables listed under 'remove' is removed after adding additional
+  # features, which means that they might be used for feature engineering, but
+  # should not be used as input the the neural network.
+  remove:
+    - ribcage
+    # - heartrate
+  breathing_min: 0
+  breathing_max: 4096
+  heartrate_min: 35
+  heartrate_max: 185
+  scale: True
+  range_window: 50
+  range_smoothing: 50
+  slope_shift: 1
+  slope_smoothing: 100
+  slope_abs: True
+  # If 'diff_targets' > 0, the change in the target value will be used as
+  # target, and the value 'diff_targets' will indicate the step size when
+  # calculating the change/difference.
+  diff_targets: 0
+
+split:
+  train_split: 0.7
+
+scale:
+  method: robust
+
+sequentialize:
+  # History window size in deciseconds
+  hist_size: 50
+  # Use only every nth element
+  use_elements: 1
+  # Use mean power value over given window
+  target_mean_window: 1
+
+train:
+  net: cnn
+  n_epochs: 20
+  batch_size: 128
+  kernel_size: 4
+  weigh_samples: False
+  weight_thresh: 250
+  weight: 1.5
+
+evaluate:
+  smooth_targets: 0
