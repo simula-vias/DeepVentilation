@@ -21,10 +21,11 @@ limitations under the License.
 var flowRibcageCharacteristic;
 var ribcageValues = [];
 var airflowValues = [];
+var recentAirflow = [];
 var maxRibVal = 0;
 var minRibVal = 4096;
-var minAirVal = 0.1;
-var maxAirVal = 0.0;
+var minAirVal = 1000;
+var maxAirVal = -1000;
 var ribcageCanvas = document.querySelector('#ribcageChart');
 var airflowCanvas = document.querySelector('#airflowChart');
 
@@ -121,19 +122,24 @@ function handleFlowRibcageNotifications(event) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({'value': ribcagePlotValues.slice(-51, -1)})
+          body: JSON.stringify({'value': ribcageValues.slice(-52, -1)})
         })
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
             
-            airflowValues.push(data.airflow);
+            let airflow = Number(data.airflow);
+            recentAirflow.push(airflow);
+            let recentMax = Math.max.apply(null, recentAirflow);
+            console.log(recentMax);
 
-            if (data.airflow > maxAirVal) {
-                maxAirVal = data.airflow;
+            airflowValues.push(recentMax);
+
+            if (airflow > maxAirVal) {
+                maxAirVal = airflow;
             }
-            if (data.airflow < minAirVal) {
-                minAirVal = data.airflow;
+            if (airflow < minAirVal) {
+                minAirVal = airflow;
             }
             let airflowRange = maxAirVal - minAirVal;
 
@@ -156,8 +162,11 @@ function handleFlowRibcageNotifications(event) {
         
     } 
 
-    if (airflowValues.length > 64) {
+    if (airflowValues.length > 50) {
         airflowValues.shift();
+    }
+    if (recentAirflow.length > 3) {
+        recentAirflow.shift();
     }
 }
 

@@ -14,6 +14,7 @@ import time
 from flask import Flask, abort, jsonify
 from flask import request
 import joblib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from tensorflow.keras import models
@@ -34,21 +35,36 @@ Output: airflow estimation + time of execution
 @app.route("/getEstimation", methods=["POST"])
 def getEstimation():
     t = time.time()
-    print(request.json)
-    if not request.json or not "value" in request.json or len(request.json["value"]) != hist_size:
+    # print(request.json)
+    if not request.json or not "value" in request.json or len(request.json["value"]) < hist_size:
         abort(400)
 
+    print(request.json["value"])
     X = np.array(request.json["value"]).reshape(-1, 1)
     X = preprocess(X)
-    X = scale(X)
-    print(scaler)
-    print(X)
-    print(X.shape)
+    # X = scale(X)
+    X = np.array([X])
 
-    y = [0]
+    y = model.predict(X)
+    y = y[0][0]
+    print(y)
+
     t = time.time() - t 
-    return jsonify({"airflow" : str(y[0]),"time" : str(t)})
 
+    return jsonify({"airflow" : str(y),"time" : str(t)})
+
+def test(X):
+
+    X = preprocess(X)
+    # X = scale(X)
+    # plt.plot(X)
+    # plt.show()
+    # print(X)
+
+    X = np.array([X])
+    np.save("X_app", X)
+    y = model.predict(X)
+    print(y[0][0])
 
 def preprocess(X):
     """Preprocess input data.
@@ -60,11 +76,13 @@ def preprocess(X):
         numpy array: Preprocessed inputs.
 
     """
-    range_smoothing = 1
-    slope_shift = 1
 
     df = pd.DataFrame(X, columns=["ribcage"])
     df.dropna(inplace=True)
+    breathing_min = 0
+    breathing_max = 4096
+    breathing_range = breathing_max - breathing_min
+    df["ribcage"] = (df["ribcage"] - breathing_min)/breathing_range
 
     df["ribcage_gradient"] = np.gradient(df["ribcage"])
 
@@ -79,7 +97,9 @@ def preprocess(X):
 
     del df["ribcage"]
 
-    df.fillna(method="bfill", inplace=True)
+    # df.fillna(method="bfill", inplace=True)
+    df.dropna(inplace=True)
+    df = df.iloc[-50:,:]
 
     return np.array(df)
 
@@ -127,15 +147,27 @@ This function load all the models form the file one time before the lauch of the
 """
 if __name__ == "__main__":
     # Load scaler
-    scaler = joblib.load(PATH + "scaler.sav")
-    print("Scaler load successfully")
+    # scaler = joblib.load(PATH + "scaler.sav")
+    # print("Scaler load successfully")
 
     # Load model
     model = models.load_model(PATH + "model.h5")
-    print("Model successfully")
+    print("Model loaded successfully")
     print(model.summary())
 
     # Start the app
     app.run(debug=True, port=5000)
+
+    # df = pd.read_csv("5.csv", index_col=0, names=[
+    #     "time", "airflow", "ribcage", "heartrate"
+    # ])
+
+    # del df["airflow"]
+    # del df["heartrate"]
+
+    # X = np.array(df)
+    # X = X[:51, :]
+    # test(X)
+
 
 
