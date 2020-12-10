@@ -96,7 +96,7 @@ function handleFlowRibcageNotifications(event) {
 
         ribcageValues.push(int16View[i]);
     }
-    // ribcageText.innerHTML = "Ribcage movement: " + int16View[0].toString();
+    ribcageText.innerHTML = "Ribcage movement: " + int16View[0].toString() + " mV";
     
     // let minRibVal = Math.min.apply(null, ribcageValues);
     // let maxRibVal = Math.max.apply(null, ribcageValues);
@@ -105,8 +105,8 @@ function handleFlowRibcageNotifications(event) {
         return (element - minRibVal)/ribcageRange;
     });
 
-    if (ribcagePlotValues.length > 455) {
-    // if (ribcagePlotValues.length > 200) {
+    // if (ribcagePlotValues.length > 455) {
+    if (ribcagePlotValues.length > 200) {
         ribcageValues.splice(0, 7);
     }
     drawWaves(ribcagePlotValues, ribcageCanvas, 1, 6.0);
@@ -124,16 +124,22 @@ function handleFlowRibcageNotifications(event) {
           },
           body: JSON.stringify({'value': ribcageValues.slice(-52, -1)})
         })
-        .then((response) => response.json())
-        .then((data) => {
+        .then((response) => response.json()) .then((data) => {
           console.log('Success:', data);
             
             let airflow = Number(data.airflow);
+
+            if (airflow < 0) {
+                airflow = 0;
+            }
+
             recentAirflow.push(airflow);
+
             let recentMax = Math.max.apply(null, recentAirflow);
             console.log(recentMax);
 
             airflowValues.push(recentMax);
+
 
             if (airflow > maxAirVal) {
                 maxAirVal = airflow;
@@ -150,10 +156,11 @@ function handleFlowRibcageNotifications(event) {
             // let a = airflowPlotValues.slice(-1);
             // a = a*200 - 100;
 
-            // airflowText.innerHTML = "Predicted airflow: " + airflowValues.slice(-1);
+            airflowText.innerHTML = "Estimated airflow: " + airflowValues.slice(-1) + " l/min";
             // airflowText.innerHTML = "Predicted airflow: " + Math.round(a);
 
-            drawWaves(airflowPlotValues, airflowCanvas, 1, 42, 70);
+            // drawWaves(airflowPlotValues, airflowCanvas, 1, 42, 70);
+            drawWaves(airflowPlotValues, airflowCanvas, 1, 60, 70);
                 
         })
         .catch((error) => {
@@ -162,10 +169,11 @@ function handleFlowRibcageNotifications(event) {
         
     } 
 
-    if (airflowValues.length > 50) {
+    // if (airflowValues.length > 64) {
+    if (airflowValues.length > 20) {
         airflowValues.shift();
     }
-    if (recentAirflow.length > 3) {
+    if (recentAirflow.length > 5) {
         recentAirflow.shift();
     }
 }

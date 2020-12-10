@@ -11,10 +11,11 @@
 
     <body>
         <div id="controls">
+            <button id="connect">Connect PM5</button>
             <button id="connect-flow-ribcage">Connect FLOW</button>
-            <button id="stop-flow">Disconnect FLOW sensor</button>
-            <button id="connect-hr">Connect HR</button>
-            <button id="stop-hr">Disconnect HR</button>
+            <!-- <button id="stop-flow">Disconnect FLOW sensor</button> -->
+            <!-- <button id="connect-hr">Connect HR</button> -->
+            <!-- <button id="stop-hr">Disconnect HR</button> -->
         </div>
 
         <div class="container">
@@ -28,22 +29,30 @@
         </div>
         </br>
         <div class="container">
-            <div class="statusText" id="heartRateText">HR</div>
-              <canvas class="chart" id="heartRateChart"></canvas>
+            <div class="statusText" id="powerText">Power</div>
+            <canvas class="chart" id="powerChart"></canvas>
         </div>
+        <!-- </br> -->
+        <!-- <div class="container"> -->
+        <!--     <div class="statusText" id="heartRateText">HR</div> -->
+        <!--       <canvas class="chart" id="heartRateChart"></canvas> -->
+        <!-- </div> -->
 
         <script src="js/heartrate.js"></script>
         <script src="js/chart.js"></script>
         <script src="js/flow-ribcage.js"></script>
+        <script src="js/pm5.js"></script>
+        <script src="js/pm5-printables.js"></script>
+        <script src="js/app.js"></script>
 
         <script>
-            document.querySelector("#connect-hr").addEventListener("click", onHeartRateButtonClick);
-            document.querySelector("#stop-hr").addEventListener('click', onStopHeartRateClick);
             document.querySelector("#connect-flow-ribcage").addEventListener("click", onFlowRibcageButtonClick);
-            document.querySelector("#stop-flow").addEventListener('click', onStopFlowRibcageClick);
         </script>
 
+            <!-- document.querySelector("#stop-flow").addEventListener('click', onStopFlowRibcageClick); -->
+            <!-- document.querySelector("#stop-hr").addEventListener('click', onStopHeartRateClick); -->
 
+            <!-- document.querySelector("#connect-hr").addEventListener("click", onHeartRateButtonClick); -->
 
     </body>
 
